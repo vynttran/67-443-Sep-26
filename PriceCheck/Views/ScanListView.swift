@@ -3,27 +3,27 @@
 // Running on macOS 11.0
 // Qapla'
 
-
 import SwiftUI
 
 struct ScanListView: View {
-    
-  var body: some View {
-    
     let locationScans = Bundle.main.decode([Location].self, from: "scan_api_data.json").sorted(by: { $0 < $1 })
-  
-    NavigationView {
-      List {
-        ForEach(locationScans) { location in
-          Section(header: Text(location.name), content: {
-            ForEach(location.scans.sorted(by: { $0 < $1 })) { scan in
-              Text(scan.item)
+
+    var body: some View {
+        NavigationView {
+            List {
+                ForEach(locationScans) { location in
+                    Section(header: Text(location.name)) {
+                        ForEach(location.scans.sorted(by: { $0 < $1 })) { scan in
+                            NavigationLink(destination: ScanDetailView(scan: scan)) {
+                                ScanView(scan: scan)
+                            }
+                        }
+                    }
+                }
             }
-          })
+            .navigationBarTitle("Scans")
         }
-      }.navigationBarTitle("Scans")
     }
-  }
 }
 
 struct ScanListView_Previews: PreviewProvider {
@@ -31,3 +31,4 @@ struct ScanListView_Previews: PreviewProvider {
         ScanListView()
     }
 }
+
